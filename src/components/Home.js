@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-require('dotenv').config();
 
 class Home extends Component {
   constructor(){
     super();
     this.state = {
-      user: "octocat",
+      user: "",
       language: "-"
     }
   }
@@ -14,8 +13,9 @@ class Home extends Component {
     try {
       const link = `https://api.github.com/users/${this.state.user}/repos`
       const data = await fetch(link).then(res => res.json())
-      console.log(data, data.message)
-      return data.status === 200 ? data : {message: "Not Found"}
+      const response = await fetch(link).then(res => res)
+      console.log("RS>>>", response, response.headers.status)
+      return response.headers.status === 200 ? data : {message: "Not Found"}
     } catch (err) {
       console.error(err.message)
     }
@@ -23,7 +23,7 @@ class Home extends Component {
 
   async extractRepoLanguages() {
     const repos = await this.retrieveRepos()
-    console.log(repos)
+    console.log(repos, repos.message)
     if(repos.message === "Not Found"){
       return [[{}],[{}]]
     } else {
@@ -34,7 +34,6 @@ class Home extends Component {
 
   async countOfLanguages() {
     const [repos, languages] = await this.extractRepoLanguages()
-    console.log(repos)
     const uniqLanguages = Array.from(new Set(languages))
     const languageAndCount = []
     const countOnly = []
@@ -56,6 +55,7 @@ class Home extends Component {
     const result = mostUsedLanguages.join(" / ")
 
     result === "" ? this.setState({language: "Not Found"}) : this.setState({language: result})
+
     return result
   }
 

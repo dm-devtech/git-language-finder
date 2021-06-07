@@ -1,6 +1,10 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import Home from './Home';
 
+beforeEach(() => {
+
+});
+
 afterEach(() => {
   jest.restoreAllMocks();
 });
@@ -28,6 +32,19 @@ describe('Home', () => {
   test('When form submitted alert message appears', async () => {
     const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
 
+    const fakeMessage = [{}]
+
+    const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+      const fetchResponse = {
+        ok: true,
+        json: () => Promise.resolve(fakeMessage),
+        headers: {
+          status: 200
+        }
+      };
+      return Promise.resolve(fetchResponse);
+    })
+
     const { getByTestId } = render(<Home />);
     const submitButton = getByTestId("Submit")
 
@@ -49,7 +66,10 @@ describe('Home', () => {
     const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
-        json: () => Promise.resolve(fakeMessage)
+        json: () => Promise.resolve(fakeMessage),
+        headers: {
+          status: 200
+        }
       };
       return Promise.resolve(fetchResponse);
     })
@@ -71,7 +91,10 @@ describe('Home', () => {
     const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
-        json: () => Promise.resolve(fakeApi)
+        json: () => Promise.resolve(fakeApi),
+        headers: {
+          status: 200
+        }
       };
       return Promise.resolve(fetchResponse);
     })
@@ -98,7 +121,10 @@ describe('Home', () => {
     const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
-        json: () => Promise.resolve(fakeApi)
+        json: () => Promise.resolve(fakeApi),
+        headers: {
+          status: 200
+        }
       };
       return Promise.resolve(fetchResponse);
     })
@@ -125,7 +151,10 @@ describe('Home', () => {
     const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
-        json: () => Promise.resolve(fakeApi)
+        json: () => Promise.resolve(fakeApi),
+            headers: {
+              status: 200
+            }
       };
       return Promise.resolve(fetchResponse);
     })
@@ -148,12 +177,15 @@ test('testing 3 tied result i.e. two languages are most used', async () => {
   const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
   const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
 
-  const fakeData = [{language:"JavaScript"},{language:"JavaScript"},{language:"Ruby"},{language:"Ruby"},{language:"C#"},{language:"C#"}]
+  const fakeData = [ {language:"JavaScript"},{language:"JavaScript"},{language:"Ruby"},{language:"Ruby"},{language:"C#"},{language:"C#"}]
 
   const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
     const fetchResponse = {
       ok: true,
-      json: () => Promise.resolve(fakeData)
+      json: () => Promise.resolve(fakeData),
+      headers: {
+        status: 200
+      }
     };
     return Promise.resolve(fetchResponse);
   })
