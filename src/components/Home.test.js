@@ -1,6 +1,10 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import Home from './Home';
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 test('renders Homepage', () => {
   render(<Home />);
 });
@@ -10,17 +14,14 @@ test('check page title exists', () => {
   expect(getByText("Git Hub Language Finder")).toBeInTheDocument();
 });
 
-// test.only("submit button can be clicked", () => {
-//   const onSubmit = jest.fn(e => e.preventDefault());
-//   const { getByText } = render(<Home handleSubmit={onSubmit} />);
-//   const submitButton = getByText("Submit")
-//   fireEvent.click(submitButton);
-//   expect(onSubmit).toHaveBeenCalledTimes(1);
-// });
-
 test('check input field exists', () => {
-  const {getByTestId, getByText} = render(<Home />)
+  const {getByTestId} = render(<Home />)
   expect(getByTestId("input-field")).toBeInTheDocument();
+});
+
+test('check Submit button exists', () => {
+  const {getByTestId} = render(<Home />)
+  expect(getByTestId("Submit")).toBeInTheDocument();
 });
 
 test('When form submitted alert message appears', async () => {
@@ -46,12 +47,35 @@ test('no form data given', async () => {
   fireEvent.click(submitButton);
 
   expect(alertSpy).toHaveBeenCalledTimes(1);
-  expect(alertSpy).not.toHaveBeenCalledWith("Submitting User: octocat")
+  expect(alertSpy).not.toHaveBeenCalledWith("octocat")
 })
 
-// test input gets put into fetch
+test('testing result', async () => {
+  const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
+  const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
 
-// test input then submit does something
+  const fakeApi = [{language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
+
+  const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+    const fetchResponse = {
+      ok: true,
+      json: () => Promise.resolve(fakeApi)
+    };
+    return Promise.resolve(fetchResponse);
+  })
+
+  const { getByText, getByTestId } = render(<Home />);
+  const submitButton = getByTestId("Submit")
+
+  fireEvent.change(getByTestId("input-field"), { target: { value: 'octocat' } });
+  fireEvent.click(submitButton);
+
+  expect(alertSpy).toHaveBeenCalledTimes(1);
+  expect(alertSpy).toHaveBeenCalledWith("Submitting User: octocat")
+  expect(dataSpy).toHaveBeenCalledTimes(1);
+  expect(resultFunctionSpy).toHaveBeenCalled()
+  await waitFor(() => expect(getByText("Language(s) used the most: Ruby")).toBeInTheDocument())
+})
 
 // EC - invalid user
 
@@ -60,5 +84,3 @@ test('no form data given', async () => {
 // EC - most popular language = null
 
 // EC - tied top languages
-
-// css

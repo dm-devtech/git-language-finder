@@ -1,29 +1,95 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
-function Home() {
-  const [user, setUser] = React.useState("");
+class Home extends Component {
+  constructor(){
+    super();
+    this.state = {
+      user: "octocat",
+      language: "-"
+    }
+  }
 
-  const handleSubmit = (e) => {
-     e.preventDefault();
-     alert(`Submitting User: ${user}`)
-   }
+  async retrieveRepos() {
+    try {
+      const link = `https://api.github.com/users/${this.state.user}/repos`
+      const data = await fetch(link).then(res => res.json())
+      return data
+      console.log(data)
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
 
+  async extractRepoLanguages() {
+    const repos = await this.retrieveRepos()
+    const languages = repos.map(repo => repo.language)
+
+    return [repos, languages]
+  }
+
+  async countOfLanguages() {
+    const [repos, languages] = await this.extractRepoLanguages()
+
+    const uniqLanguages = Array.from(new Set(languages))
+    const languageAndCount = []
+    const countOnly = []
+
+    for(let i = 0; i < uniqLanguages.length; i++){
+      countOnly.push(languages.filter((v) => (v === uniqLanguages[i])).length)
+      languageAndCount.push([uniqLanguages[i], languages.filter((v) => (v === uniqLanguages[i])).length])
+    }
+
+    return [countOnly, languageAndCount]
+  }
+
+  async mostUsedLanguages() {
+    const [countOnly, languageCount] = await this.countOfLanguages()
+    const highestCount = Math.max(...countOnly)
+    const mostUsedLanguagesAndCount = languageCount.filter(([language, count]) => count === highestCount)
+    const mostUsedLanguages = mostUsedLanguagesAndCount.flat().filter(l => l === null || typeof l === "string").map(l => l === null ? "No Language" : l)
+
+    this.setState({language: mostUsedLanguages.join(" / ")})
+    return mostUsedLanguages.join(" / ")
+  }
+
+  submitHandler = (event) => {
+    event.preventDefault();
+    alert("Submitting User: " + this.state.user);
+    this.mostUsedLanguages()
+    console.log(this.state.language)
+  }
+
+  changeHandler = (event) => {
+    let name = event.target.name;
+    let value = event.target.value;
+    this.setState({[name]: value});
+  }
+
+  async componentDidMount() {
+    const languages = await this.mostUsedLanguages()
+    this.setState({language: languages})
+  }
+
+render() {
   return (
     <div>
      <h1>Git Hub Language Finder</h1>
 
-     <form onSubmit={handleSubmit}>
-      <textarea
-        onChange={(e) => setUser(e.target.value)}
+     <form onSubmit={this.submitHandler}>
+      <input
+        type='text'
+        onChange={this.changeHandler}
         data-testid='input-field'
-        style={{width: "200px"}}
         name='user'
-        value={user}
        />
-      <button type='submit' data-testid='Submit'>Submit</button>
+      <input type='submit' data-testid='Submit'/>
+       <div className='result' data-testid='result'>
+       Language(s) used the most: {this.state.language}
+       </div>
      </form>
     </div>
     );
   }
+}
 
 export default Home;
