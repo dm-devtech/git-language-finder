@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+require('dotenv').config();
 
 class Home extends Component {
   constructor(){
@@ -13,23 +14,27 @@ class Home extends Component {
     try {
       const link = `https://api.github.com/users/${this.state.user}/repos`
       const data = await fetch(link).then(res => res.json())
-      return data
-      console.log(data)
+      console.log(data, data.message)
+      return data.status === 200 ? data : {message: "Not Found"}
     } catch (err) {
-      console.error(err.message);
+      console.error(err.message)
     }
   }
 
   async extractRepoLanguages() {
     const repos = await this.retrieveRepos()
-    const languages = repos.map(repo => repo.language)
-
-    return [repos, languages]
+    console.log(repos)
+    if(repos.message === "Not Found"){
+      return [[{}],[{}]]
+    } else {
+      const languages = repos.map(repo => repo.language)
+      return [repos, languages]
+    }
   }
 
   async countOfLanguages() {
     const [repos, languages] = await this.extractRepoLanguages()
-
+    console.log(repos)
     const uniqLanguages = Array.from(new Set(languages))
     const languageAndCount = []
     const countOnly = []
@@ -48,15 +53,16 @@ class Home extends Component {
     const mostUsedLanguagesAndCount = languageCount.filter(([language, count]) => count === highestCount)
     const mostUsedLanguages = mostUsedLanguagesAndCount.flat().filter(l => l === null || typeof l === "string").map(l => l === null ? "No Language" : l)
 
-    this.setState({language: mostUsedLanguages.join(" / ")})
-    return mostUsedLanguages.join(" / ")
+    const result = mostUsedLanguages.join(" / ")
+
+    result === "" ? this.setState({language: "Not Found"}) : this.setState({language: result})
+    return result
   }
 
   submitHandler = (event) => {
     event.preventDefault();
     alert("Submitting User: " + this.state.user);
     this.mostUsedLanguages()
-    console.log(this.state.language)
   }
 
   changeHandler = (event) => {
