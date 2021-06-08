@@ -26,7 +26,6 @@ class Home extends Component {
       return [[{}],[{}]]
     } else {
       const languages = repos.map(repo => repo.language)
-      console.log(repos, languages)
       return [repos, languages]
     }
   }
@@ -87,8 +86,8 @@ render() {
         data-testid='input-field'
         name='user'
        />
-      <input type='submit' data-testid='Submit'/>
-       <div className='result' data-testid='result'>
+      <input type='submit' data-testid='Submit' className="add-button"/>
+       <div className='body-text' data-testid='result'>
        Language(s) used the most: {this.state.language}
        </div>
      </form>

@@ -1,0 +1,132 @@
+img[alt="home-icon"]{
+  margin: 0 auto;
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  width: 30px;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+  text-decoration: none;
+  font: 32px Arial, sans-serif;
+  font-weight: bold;
+  color: #6d5f67;
+}
+
+h2 {
+  text-align: center;
+  text-decoration: none;
+}
+
+h3 {
+  margin: 0 auto;
+  text-align: center;
+  text-decoration: none;
+}
+
+.Header {
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+  letter-spacing: 2px;
+  color: #6d5f67;
+  font: 24px Arial, sans-serif;
+  font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  justify-content: center;
+  display: inline-grid;
+  text-align: center;
+}
+
+.body-text {
+  height: 100%;
+  width: 100%;
+  letter-spacing: 2px;
+  color: #91818a;
+  font: 24px Arial, sans-serif;
+  text-decoration: none;
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+p {
+  margin: 5px;
+  font-weight: bold;
+  font: 12px Arial, sans-serif;
+
+}
+
+.alt-body {
+  height: 100%;
+  width: 100%;
+  letter-spacing: 2px;
+  color: #91818a;
+  font: 14px Arial, sans-serif;
+  text-decoration: none;
+  margin-top: 2px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+body {
+  background-color: #eee2d3;
+  font: 50px Arial, sans-serif;
+  text-align: center;
+  text-decoration: none;
+  text-align: center;
+}
+
+.home-button {
+  font: 12px Arial, sans-serif;
+  padding: 20px 20px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #91818a;
+  background-color: #e2cdb6;
+  border: none;
+  border-radius: 100px;
+  box-shadow: 0 6px #cba77c;
+  margin: 8px;
+}
+
+.home-button:hover {
+  font: 12px Arial, sans-serif;
+  display:inline-block;
+}
+
+.home-button:active {
+  display:inline-block;
+  font: 12px Arial, sans-serif;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.add-button {
+  font: 10px Arial, sans-serif;
+  padding: 10px 10px;
+  cursor: pointer;
+  outline: none;
+  color: #91818a;
+  background-color: #e2cdb6;
+  border: none;
+  border-radius: 100px;
+  box-shadow: 0 6px #cba77c;
+  margin-bottom: 10px;
+  margin: 5px;
+}
+
+.add-button:hover {
+  font: 10px Arial, sans-serif;
+  display:inline-block;
+}
+
+.add-button:active {
+  display:inline-block;
+  font: 10px Arial, sans-serif;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
