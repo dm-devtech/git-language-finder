@@ -18,6 +18,13 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "!src/index.js",
+      "!src/reportWebVitals.js",
+      "!src/logo.svg"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

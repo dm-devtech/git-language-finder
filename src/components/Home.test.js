@@ -1,15 +1,11 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import Home from './Home';
 
-beforeEach(() => {
-
-});
-
 afterEach(() => {
   jest.restoreAllMocks();
 });
 
-describe('Home', () => {
+describe('testing main page', () => {
   test('renders Homepage', () => {
     render(<Home />);
   });
@@ -32,19 +28,6 @@ describe('Home', () => {
   test('When form submitted alert message appears', async () => {
     const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
 
-    const fakeMessage = [{}]
-
-    const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
-      const fetchResponse = {
-        ok: true,
-        json: () => Promise.resolve(fakeMessage),
-        headers: {
-          status: 200
-        }
-      };
-      return Promise.resolve(fetchResponse);
-    })
-
     const { getByTestId } = render(<Home />);
     const submitButton = getByTestId("Submit")
 
@@ -55,40 +38,10 @@ describe('Home', () => {
     expect(alertSpy).toHaveBeenCalledWith("Submitting User: octocat")
   })
 
-  test('no form data given', async () => {
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-
-    const { getByText, getByTestId } = render(<Home />);
-    const submitButton = getByTestId("Submit")
-
-    const fakeMessage = [{message:"Not Found"}]
-
-    const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
-      const fetchResponse = {
-        ok: true,
-        json: () => Promise.resolve(fakeMessage),
-        headers: {
-          status: 200
-        }
-      };
-      return Promise.resolve(fetchResponse);
-    })
-
-    fireEvent.change(getByTestId("input-field"), { target: { } });
-    fireEvent.click(submitButton);
-
-    expect(alertSpy).toHaveBeenCalledTimes(1);
-    expect(alertSpy).not.toHaveBeenCalledWith("octocat")
-    await waitFor(() => expect(getByText("Language(s) used the most: Not Found")).toBeInTheDocument())
-  })
-
   test('testing result', async () => {
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
-    const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
-
     const fakeApi = [{language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
 
-    const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+    const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeApi),
@@ -105,20 +58,30 @@ describe('Home', () => {
     fireEvent.change(getByTestId("input-field"), { target: { value: 'octocat' } });
     fireEvent.click(submitButton);
 
-    expect(alertSpy).toHaveBeenCalledTimes(1);
-    expect(alertSpy).toHaveBeenCalledWith("Submitting User: octocat")
-    expect(dataSpy).toHaveBeenCalledTimes(1);
-    expect(resultFunctionSpy).toHaveBeenCalled()
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     await waitFor(() => expect(getByText("Language(s) used the most: Ruby")).toBeInTheDocument())
   })
 
-  test('testing tied result i.e. two languages are most used', async () => {
+  test('edge case; no form data given', async () => {
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    const { getByText, getByTestId } = render(<Home />);
+    const submitButton = getByTestId("Submit")
+
+    fireEvent.change(getByTestId("input-field"), { target: { } });
+    fireEvent.click(submitButton);
+
+    expect(alertSpy).toHaveBeenCalledWith("Submitting User: ")
+    await waitFor(() => expect(getByText("Language(s) used the most: Not Found")).toBeInTheDocument())
+  })
+
+  test('edge case; testing tied result i.e. two languages are most used', async () => {
     const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
     const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
 
     const fakeApi = [{language:"JavaScript"},{language:"JavaScript"},{language:"Ruby"},{language:"Ruby"}]
 
-    const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+    const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeApi),
@@ -137,18 +100,18 @@ describe('Home', () => {
 
     expect(alertSpy).toHaveBeenCalledTimes(1);
     expect(alertSpy).toHaveBeenCalledWith("Submitting User: testUser")
-    expect(dataSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(resultFunctionSpy).toHaveBeenCalled()
     await waitFor(() => expect(getByText("Language(s) used the most: JavaScript / Ruby")).toBeInTheDocument())
   })
 
-  test('testing if most repos dont have a language', async () => {
+  test('edge case; testing if most repos dont have a language', async () => {
     const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
     const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
 
     const fakeApi = [{language:null},{language:null},{language:null},{language:"Ruby"}]
 
-    const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+    const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeApi),
@@ -167,40 +130,77 @@ describe('Home', () => {
 
     expect(alertSpy).toHaveBeenCalledTimes(1);
     expect(alertSpy).toHaveBeenCalledWith("Submitting User: differentUser")
-    expect(dataSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(resultFunctionSpy).toHaveBeenCalled()
     await waitFor(() => expect(getByText("Language(s) used the most: No Language")).toBeInTheDocument())
   })
-})
 
-test('testing 3 tied result i.e. two languages are most used', async () => {
-  const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
-  const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
+  test('edge case; testing 3 tied result i.e. two languages are most used', async () => {
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
+    const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
+    const repoLanguagesSpy = jest.spyOn(Home.prototype, 'extractRepoLanguages')
 
-  const fakeData = [ {language:"JavaScript"},{language:"JavaScript"},{language:"Ruby"},{language:"Ruby"},{language:"C#"},{language:"C#"}]
+    const fakeData = [ {language:"JavaScript"},{language:"JavaScript"},{language:"Ruby"},{language:"Ruby"},{language:"C#"},{language:"C#"}]
 
-  const dataSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
-    const fetchResponse = {
-      ok: true,
-      json: () => Promise.resolve(fakeData),
-      headers: {
-        status: 200
-      }
-    };
-    return Promise.resolve(fetchResponse);
+    const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+      const fetchResponse = {
+        ok: true,
+        json: () => Promise.resolve(fakeData),
+        headers: {
+          status: 200
+        }
+      };
+      return Promise.resolve(fetchResponse);
+    })
+
+    const { getByText, getByTestId } = render(<Home />);
+    const submitButton = getByTestId("Submit")
+
+    fireEvent.change(getByTestId("input-field"), { target: { value: 'otherUser' } });
+    fireEvent.click(submitButton);
+
+    expect(alertSpy).toHaveBeenCalledTimes(1);
+    expect(alertSpy).toHaveBeenCalledWith("Submitting User: otherUser")
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(repoLanguagesSpy).toHaveBeenCalled()
+    expect(resultFunctionSpy).toHaveBeenCalled()
+    await waitFor(() => expect(getByText("Language(s) used the most: JavaScript / Ruby / C#")).toBeInTheDocument())
   })
 
-  const { getByText, getByTestId } = render(<Home />);
-  const submitButton = getByTestId("Submit")
+  test('edge case; testing response error code', async () => {
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
+    const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
+    const repoLanguagesSpy = jest.spyOn(Home.prototype, 'extractRepoLanguages')
 
-  fireEvent.change(getByTestId("input-field"), { target: { value: 'otherUser' } });
-  fireEvent.click(submitButton);
+    const fakeData = [{language:"JavaScript"},{language:"JavaScript"}]
 
-  expect(alertSpy).toHaveBeenCalledTimes(1);
-  expect(alertSpy).toHaveBeenCalledWith("Submitting User: otherUser")
-  expect(dataSpy).toHaveBeenCalledTimes(1)
-  expect(resultFunctionSpy).toHaveBeenCalled()
-  await waitFor(() => expect(getByText("Language(s) used the most: JavaScript / Ruby / C#")).toBeInTheDocument())
+    const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+      const fetchResponse = {
+        ok: true,
+        json: () => Promise.resolve(fakeData),
+        headers: {
+          status: 404
+        }
+      };
+      return Promise.resolve(fetchResponse);
+    })
+
+    const { getByText, getByTestId } = render(<Home />);
+    const submitButton = getByTestId("Submit")
+
+    fireEvent.change(getByTestId("input-field"), { target: { value: 'otherUser' } });
+    fireEvent.click(submitButton);
+
+    expect(alertSpy).toHaveBeenCalledTimes(1);
+    expect(alertSpy).toHaveBeenCalledWith("Submitting User: otherUser")
+    expect(fetchSpy).toHaveBeenCalledTimes(1)
+    expect(resultFunctionSpy).toHaveBeenCalled()
+    expect(repoLanguagesSpy).toHaveBeenCalled()
+    await waitFor(() => expect(getByText("Language(s) used the most: Not Found")).toBeInTheDocument())
+  })
+
 })
 
-// // EC - invalid user
+// css
+// tidy up code maybe try updating the syntax
+// readme

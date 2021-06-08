@@ -14,7 +14,6 @@ class Home extends Component {
       const link = `https://api.github.com/users/${this.state.user}/repos`
       const data = await fetch(link).then(res => res.json())
       const response = await fetch(link).then(res => res)
-      console.log("RS>>>", response, response.headers.status)
       return response.headers.status === 200 ? data : {message: "Not Found"}
     } catch (err) {
       console.error(err.message)
@@ -23,11 +22,11 @@ class Home extends Component {
 
   async extractRepoLanguages() {
     const repos = await this.retrieveRepos()
-    console.log(repos, repos.message)
     if(repos.message === "Not Found"){
       return [[{}],[{}]]
     } else {
       const languages = repos.map(repo => repo.language)
+      console.log(repos, languages)
       return [repos, languages]
     }
   }
