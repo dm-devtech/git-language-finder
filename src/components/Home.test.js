@@ -45,9 +45,7 @@ describe('testing main page', () => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeApi),
-        headers: {
-          status: 200
-        }
+        status: 200
       };
       return Promise.resolve(fetchResponse);
     })
@@ -58,7 +56,7 @@ describe('testing main page', () => {
     fireEvent.change(getByTestId("input-field"), { target: { value: 'octocat' } });
     fireEvent.click(submitButton);
 
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(2);
     await waitFor(() => expect(getByText("Language(s) used the most: Ruby")).toBeInTheDocument())
   })
 
@@ -85,9 +83,7 @@ describe('testing main page', () => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeApi),
-        headers: {
-          status: 200
-        }
+        status: 200
       };
       return Promise.resolve(fetchResponse);
     })
@@ -115,9 +111,7 @@ describe('testing main page', () => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeApi),
-            headers: {
-              status: 200
-            }
+        status: 200
       };
       return Promise.resolve(fetchResponse);
     })
@@ -146,9 +140,7 @@ describe('testing main page', () => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeData),
-        headers: {
-          status: 200
-        }
+        status: 200
       };
       return Promise.resolve(fetchResponse);
     })
@@ -178,9 +170,7 @@ describe('testing main page', () => {
       const fetchResponse = {
         ok: true,
         json: () => Promise.resolve(fakeData),
-        headers: {
-          status: 404
-        }
+        status: 404
       };
       return Promise.resolve(fetchResponse);
     })

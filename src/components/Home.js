@@ -14,7 +14,8 @@ class Home extends Component {
       const link = `https://api.github.com/users/${this.state.user}/repos`
       const data = await fetch(link).then(res => res.json())
       const response = await fetch(link).then(res => res)
-      return response.headers.status === 200 ? data : {message: "Not Found"}
+      console.log(response.status, data)
+      return response.status !== 200 ? {message: "Not Found"} : data
     } catch (err) {
       console.error(err.message)
     }
@@ -53,7 +54,6 @@ class Home extends Component {
     const result = mostUsedLanguages.join(" / ")
 
     result === "" ? this.setState({language: "Not Found"}) : this.setState({language: result})
-
     return result
   }
 
@@ -74,24 +74,24 @@ class Home extends Component {
     this.setState({language: languages})
   }
 
-render() {
-  return (
-    <div>
-     <h1>Git Hub Language Finder</h1>
+  render() {
+    return (
+      <div>
+        <h1>Git Hub Language Finder</h1>
+          <form onSubmit={this.submitHandler}>
+            <input
+              type='text'
+              onChange={this.changeHandler}
+              data-testid='input-field'
+              name='user'
+             />
+             <input type='submit' data-testid='Submit' className="add-button"/>
+          </form>
 
-     <form onSubmit={this.submitHandler}>
-      <input
-        type='text'
-        onChange={this.changeHandler}
-        data-testid='input-field'
-        name='user'
-       />
-      <input type='submit' data-testid='Submit' className="add-button"/>
-       <div className='body-text' data-testid='result'>
-       Language(s) used the most: {this.state.language}
-       </div>
-     </form>
-    </div>
+          <div className='body-text' data-testid='result'>
+            Language(s) used the most: {this.state.language}
+          </div>
+      </div>
     );
   }
 }
