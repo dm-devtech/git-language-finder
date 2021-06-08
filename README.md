@@ -8,7 +8,7 @@
 - On the app page enter a Github username and click submit
 
 ### Screenshots
-![home](Screenshots/home.JPG)
+![home](screenshots/home.JPG)
 
 ### Tests
 - To run tests do ```yarn test```
