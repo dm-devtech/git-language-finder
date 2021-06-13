@@ -39,7 +39,7 @@ describe('testing main page', () => {
   })
 
   test('testing result', async () => {
-    const fakeApi = [{language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
+    const fakeApi = [{public_repos: 2}, {language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
 
     const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
@@ -70,7 +70,7 @@ describe('testing main page', () => {
     fireEvent.click(submitButton);
 
     expect(alertSpy).toHaveBeenCalledWith("Submitting User: ")
-    await waitFor(() => expect(getByText("Language(s) used the most: Not Found")).toBeInTheDocument())
+    await waitFor(() => expect(getByText("Language(s) used the most: -")).toBeInTheDocument())
   })
 
   test('edge case; testing tied result i.e. two languages are most used', async () => {
@@ -132,7 +132,7 @@ describe('testing main page', () => {
   test('edge case; testing 3 tied result i.e. two languages are most used', async () => {
     const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
     const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
-    const repoLanguagesSpy = jest.spyOn(Home.prototype, 'extractRepoLanguages')
+    const repoLanguagesSpy = jest.spyOn(Home.prototype, 'checkResult')
 
     const fakeData = [ {language:"JavaScript"},{language:"JavaScript"},{language:"Ruby"},{language:"Ruby"},{language:"C#"},{language:"C#"}]
 
@@ -162,7 +162,7 @@ describe('testing main page', () => {
   test('edge case; testing response error code', async () => {
     const alertSpy = jest.spyOn(window, 'alert').mockImplementationOnce(() => {});
     const resultFunctionSpy = jest.spyOn(Home.prototype, 'mostUsedLanguages').mockImplementationOnce(() => {});
-    const repoLanguagesSpy = jest.spyOn(Home.prototype, 'extractRepoLanguages')
+    const repoLanguagesSpy = jest.spyOn(Home.prototype, 'checkResult')
 
     const fakeData = [{language:"JavaScript"},{language:"JavaScript"}]
 

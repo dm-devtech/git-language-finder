@@ -1,99 +1,118 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-class Home extends Component {
-  constructor(){
-    super();
-    this.state = {
-      user: "",
-      language: "-"
-    }
+const Home = () => {
+  const [user, setUser] = useState("")
+  const [language, setLanguage] = useState(null)
+  const [error, setError] = useState(null)
+
+  const retrieveUserData = async() => {
+    const apiToken = process.env.REACT_APP_TOKEN
+
+    const userLink = `https://api.github.com/users/${user}`
+    const response = await fetch(userLink,
+      {
+        headers: {
+          authorization: `token ${apiToken}`
+        }
+      }
+    )
+
+    const userData = await response.json()
+    const totalUserRepos = userData.public_repos
+    const totalPagesOfRepos = Math.ceil(userData.public_repos/100)
+    return totalPagesOfRepos
   }
 
-  async retrieveRepos() {
+  const getRepoData = async() => {
+    const apiToken = process.env.REACT_APP_TOKEN
+
+    const numberOfPages = await retrieveUserData()
+
+    const urls = [];
+
+    for (let i = 1; i <= numberOfPages; i++) {
+      urls.push(`https://api.github.com/users/${user}/repos?page=${i}&per_page=100`);
+    }
+
+    let data;
+
     try {
-      const link = `https://api.github.com/users/${this.state.user}/repos`
-      const data = await fetch(link).then(res => res.json())
-      const response = await fetch(link).then(res => res)
-      console.log(response.status, data)
-      return response.status !== 200 ? {message: "Not Found"} : data
-    } catch (err) {
-      console.error(err.message)
+      data = await Promise.all(urls.map(url => fetch(url).then(res => res.json())));
+    } catch (error) {
+      console.error(error);
     }
+
+    return data.map(page => page.map(repo => repo.language)).flat();
+
   }
 
-  async extractRepoLanguages() {
-    const repos = await this.retrieveRepos()
-    if(repos.message === "Not Found"){
-      return [[{}],[{}]]
-    } else {
-      const languages = repos.map(repo => repo.language)
-      return [repos, languages]
-    }
-  }
-
-  async countOfLanguages() {
-    const [repos, languages] = await this.extractRepoLanguages()
+  const uniqueLanguages = async(languages) => {
     const uniqLanguages = Array.from(new Set(languages))
+    return uniqLanguages
+  }
+    
+  const countOfLanguages = async(languages, uniqueLanguages) => {
     const languageAndCount = []
     const countOnly = []
 
-    for(let i = 0; i < uniqLanguages.length; i++){
-      countOnly.push(languages.filter((v) => (v === uniqLanguages[i])).length)
-      languageAndCount.push([uniqLanguages[i], languages.filter((v) => (v === uniqLanguages[i])).length])
+    for(let i = 0; i < uniqueLanguages.length; i++){
+      countOnly.push(languages.filter((v) => (v === uniqueLanguages[i])).length)
+      languageAndCount.push([uniqueLanguages[i], languages.filter((v) => (v === uniqueLanguages[i])).length])
     }
 
     return [countOnly, languageAndCount]
   }
 
-  async mostUsedLanguages() {
-    const [countOnly, languageCount] = await this.countOfLanguages()
+  const mostUsedLanguages = async(languageAndCount) => {
+    const [countOnly, languageCount] = languageAndCount
     const highestCount = Math.max(...countOnly)
     const mostUsedLanguagesAndCount = languageCount.filter(([language, count]) => count === highestCount)
     const mostUsedLanguages = mostUsedLanguagesAndCount.flat().filter(l => l === null || typeof l === "string").map(l => l === null ? "No Language" : l)
-
     const result = mostUsedLanguages.join(" / ")
 
-    result === "" ? this.setState({language: "Not Found"}) : this.setState({language: result})
     return result
   }
 
-  submitHandler = (event) => {
-    event.preventDefault();
-    alert("Submitting User: " + this.state.user);
-    this.mostUsedLanguages()
+  const getData = async() => {
+    const pages = await retrieveUserData()
+    try {
+      const repoData = await getRepoData(pages)
+      const uniqLanguages = await uniqueLanguages(repoData)
+      const count = await countOfLanguages(repoData, uniqLanguages)
+      const languages = await mostUsedLanguages(count)
+      setLanguage(languages)
+    } catch(error) {
+      console.error(error)
+    }
   }
 
-  changeHandler = (event) => {
-    let name = event.target.name;
-    let value = event.target.value;
-    this.setState({[name]: value});
+  const submitHandler = () => {
+    mostUsedLanguages()
   }
 
-  async componentDidMount() {
-    const languages = await this.mostUsedLanguages()
-    this.setState({language: languages})
+  const changeHandler = (event) => {
+    setUser(event.target.value);
   }
 
-  render() {
     return (
       <div>
         <h1>Git Hub Language Finder</h1>
-          <form onSubmit={this.submitHandler}>
+
             <input
               type='text'
-              onChange={this.changeHandler}
+              onChange={changeHandler}
               data-testid='input-field'
               name='user'
+              value={user}
              />
-             <input type='submit' data-testid='Submit' className="add-button"/>
-          </form>
+             <button onClick={getData} data-testid='Submit' className="add-button">Submit</button>
 
           <div className='body-text' data-testid='result'>
-            Language(s) used the most: {this.state.language}
+            Language(s) used the most: {language}
           </div>
       </div>
     );
   }
-}
+
 
 export default Home;
