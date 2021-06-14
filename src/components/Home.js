@@ -9,30 +9,61 @@ class Home extends Component {
     }
   }
 
-  async retrieveRepos() {
-    try {
-      const link = `https://api.github.com/users/${this.state.user}/repos`
-      const data = await fetch(link).then(res => res.json())
-      const response = await fetch(link).then(res => res)
-      console.log(response.status, data)
-      return response.status !== 200 ? {message: "Not Found"} : data
-    } catch (err) {
-      console.error(err.message)
-    }
+  async retrieveUserData(){
+    const apiToken = process.env.REACT_APP_TOKEN
+
+    const userLink = `https://api.github.com/users/${this.state.user}`
+    const userData = await fetch(userLink,
+      {
+        headers: {
+          authorization: `token ${apiToken}`
+        }
+      }
+    ).then(res => res.json())
+
+    const totalUserRepos = userData.public_repos
+    const totalPagesOfRepos = Math.ceil(userData.public_repos/100)
+    return totalPagesOfRepos
   }
 
-  async extractRepoLanguages() {
-    const repos = await this.retrieveRepos()
-    if(repos.message === "Not Found"){
-      return [[{}],[{}]]
+  async retrieveRepos() {
+    const apiToken = process.env.REACT_APP_TOKEN
+    const totalPagesOfRepos = await this.retrieveUserData()
+    const allLanguages = []
+
+    for(let i = 1; i <= totalPagesOfRepos; i++){
+      const link = `https://api.github.com/users/${this.state.user}/repos?page=${i}&per_page=100`
+      const data = await fetch(link,
+        {
+          headers: {
+            authorization: `token ${apiToken}`
+          }
+        }
+      ).then(res => res.json())
+      const languagesArray = data.map(repo => repo.language)
+      allLanguages.push(languagesArray)
+    }
+
+    const message = "Not Found"
+    const response = await fetch(`https://api.github.com/users/${this.state.user}/repos`, {
+        headers: {
+          authorization: `token ${apiToken}`
+        }
+      }).then(res => res)
+    return response.status !== 200 ? message : allLanguages.flat()
+  }
+
+  async checkResult() {
+    const languages = await this.retrieveRepos()
+    if(languages === "Not Found"){
+      return []
     } else {
-      const languages = repos.map(repo => repo.language)
-      return [repos, languages]
+      return languages
     }
   }
 
   async countOfLanguages() {
-    const [repos, languages] = await this.extractRepoLanguages()
+    const languages = await this.checkResult()
     const uniqLanguages = Array.from(new Set(languages))
     const languageAndCount = []
     const countOnly = []
