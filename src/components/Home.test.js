@@ -25,19 +25,6 @@ describe('testing main page', () => {
     expect(getByTestId("Submit")).toBeInTheDocument();
   });
 
-  test('When form submitted alert message appears', async () => {
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-
-    const { getByTestId } = render(<Home />);
-    const submitButton = getByTestId("Submit")
-
-    fireEvent.change(getByTestId("input-field"), { target: { value: 'octocat' } });
-    fireEvent.click(submitButton);
-
-    expect(alertSpy).toHaveBeenCalledTimes(1);
-    expect(alertSpy).toHaveBeenCalledWith("Submitting User: octocat")
-  })
-
   test('testing result', async () => {
     const fakeApi = [{public_repos: 2}, {language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
 
@@ -191,6 +178,3 @@ describe('testing main page', () => {
 
 })
 
-// css
-// tidy up code maybe try updating the syntax
-// readme
