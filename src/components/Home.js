@@ -74,7 +74,7 @@ const Home = () => {
     return result
   }
 
-  const getData = async() => {
+  const getResult = async() => {
     const pages = await retrieveUserData()
     try {
       const repoData = await getRepoData(pages)
@@ -86,10 +86,6 @@ const Home = () => {
     } catch(error) {
       console.error(error)
     }
-  }
-
-  const submitHandler = () => {
-    mostUsedLanguages()
   }
 
   const changeHandler = (event) => {
@@ -107,7 +103,7 @@ const Home = () => {
               name='user'
               value={user}
              />
-             <button onClick={getData} data-testid='Submit' className="add-button">Submit</button>
+             <button onClick={getResult} data-testid='Submit' className="add-button">Submit</button>
 
           <div className='body-text' data-testid='result'>
             Language(s) used the most: {language}
