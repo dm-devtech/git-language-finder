@@ -18,7 +18,6 @@ const Home = () => {
     )
 
     const userData = await response.json()
-    const totalUserRepos = userData.public_repos
     const totalPagesOfRepos = Math.ceil(userData.public_repos/100)
     return totalPagesOfRepos
   }
@@ -53,20 +52,22 @@ const Home = () => {
     
   const countOfLanguages = async(languages, uniqueLanguages) => {
     const languageAndCount = []
-    const countOnly = []
 
     for(let i = 0; i < uniqueLanguages.length; i++){
-      countOnly.push(languages.filter((v) => (v === uniqueLanguages[i])).length)
       languageAndCount.push([uniqueLanguages[i], languages.filter((v) => (v === uniqueLanguages[i])).length])
     }
 
-    return [countOnly, languageAndCount]
+    return languageAndCount
   }
 
-  const mostUsedLanguages = async(languageAndCount) => {
-    const [countOnly, languageCount] = languageAndCount
+  const highestLangCount = (languageAndCount) => {
+    const countOnly = languageAndCount.map(([language, count]) => count)
     const highestCount = Math.max(...countOnly)
-    const mostUsedLanguagesAndCount = languageCount.filter(([language, count]) => count === highestCount)
+    return highestCount
+  }
+
+  const mostUsedLanguages = async(languageAndCount, highestCount) => {
+    const mostUsedLanguagesAndCount = languageAndCount.filter(([language, count]) => count === highestCount)
     const mostUsedLanguages = mostUsedLanguagesAndCount.flat().filter(l => l === null || typeof l === "string").map(l => l === null ? "No Language" : l)
     const result = mostUsedLanguages.join(" / ")
 
@@ -79,7 +80,8 @@ const Home = () => {
       const repoData = await getRepoData(pages)
       const uniqLanguages = await uniqueLanguages(repoData)
       const count = await countOfLanguages(repoData, uniqLanguages)
-      const languages = await mostUsedLanguages(count)
+      const highestCount = await highestLangCount(count)
+      const languages = await mostUsedLanguages(count, highestCount)
       setLanguage(languages)
     } catch(error) {
       console.error(error)
