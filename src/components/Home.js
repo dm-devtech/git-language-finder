@@ -1,48 +1,20 @@
 import React, { useState } from 'react';
+import RetrieveUserData from './retrieveUserData';
+import GetRepoData from './getRepoData';
 
 const Home = () => {
   const [user, setUser] = useState("")
   const [language, setLanguage] = useState(null)
   const [error, setError] = useState(null)
 
-  const retrieveUserData = async() => {
-    const apiToken = process.env.REACT_APP_TOKEN
-
-    const userLink = `https://api.github.com/users/${user}`
-    const response = await fetch(userLink,
-      {
-        headers: {
-          authorization: `token ${apiToken}`
-        }
-      }
-    )
-
-    const userData = await response.json()
-    const totalPagesOfRepos = Math.ceil(userData.public_repos/100)
+  const pagesOfRepos = async() => {
+    const totalPagesOfRepos = await RetrieveUserData(user)
     return totalPagesOfRepos
   }
 
   const getRepoData = async() => {
-    const apiToken = process.env.REACT_APP_TOKEN
-
-    const numberOfPages = await retrieveUserData()
-
-    const urls = [];
-
-    for (let i = 1; i <= numberOfPages; i++) {
-      urls.push(`https://api.github.com/users/${user}/repos?page=${i}&per_page=100`);
-    }
-
-    let data;
-
-    try {
-      data = await Promise.all(urls.map(url => fetch(url).then(res => res.json())));
-    } catch (error) {
-      console.error(error);
-    }
-
-    return data.map(page => page.map(repo => repo.language)).flat();
-
+    const repoData = GetRepoData(user, await pagesOfRepos())
+    return repoData
   }
 
   const uniqueLanguages = async(languages) => {
@@ -75,7 +47,7 @@ const Home = () => {
   }
 
   const getResult = async() => {
-    const pages = await retrieveUserData()
+    const pages = await pagesOfRepos()
     try {
       const repoData = await getRepoData(pages)
       const uniqLanguages = await uniqueLanguages(repoData)
