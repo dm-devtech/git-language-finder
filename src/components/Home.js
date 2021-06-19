@@ -7,13 +7,15 @@ const Home = () => {
   const [language, setLanguage] = useState(null)
   const [error, setError] = useState(null)
 
-  const pagesOfRepos = async() => {
+  async function pagesOfRepos() {
     const totalPagesOfRepos = await RetrieveUserData(user)
+    console.log(totalPagesOfRepos)
     return totalPagesOfRepos
   }
 
-  const getRepoData = async() => {
+  async function getRepoData() {
     const repoData = GetRepoData(user, await pagesOfRepos())
+    console.log(repoData)
     return repoData
   }
 
@@ -54,6 +56,7 @@ const Home = () => {
       const count = await countOfLanguages(repoData, uniqLanguages)
       const highestCount = await highestLangCount(count)
       const languages = await mostUsedLanguages(count, highestCount)
+      console.log(languages)
       setLanguage(languages)
     } catch(error) {
       console.error(error)
