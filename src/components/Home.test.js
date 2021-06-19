@@ -43,7 +43,7 @@ describe('testing main page', () => {
   })
 
   test('edge case; no form data given', async () => {
-    getRepoData.mockImplementation(() => [null, null, "Ruby", "Ruby", "Ruby"])
+    getRepoData.mockImplementation(() => [])
     retrieveUserData.mockImplementation(() => 1)
 
      const { getByText, getByTestId } = render(<Home />);
@@ -52,7 +52,7 @@ describe('testing main page', () => {
      fireEvent.change(getByTestId("input-field"), { target: { } });
      fireEvent.click(submitButton);
 
-     await waitFor(() => expect(getByText("Language(s) used the most: -")).toBeInTheDocument())
+     await waitFor(() => expect(getByText("Language(s) used the most: Not Found")).toBeInTheDocument())
    })
 
   test('edge case; testing tied result i.e. two languages are most used', async () => {

@@ -9,9 +9,10 @@ const retrieveUserData = async(user) => {
         }
       }
     )
-
+    
     const userData = await response.json()
     const totalPagesOfRepos = Math.ceil(userData.public_repos/100)
+    console.log(totalPagesOfRepos)
     return totalPagesOfRepos
   }
 
