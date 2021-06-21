@@ -22,7 +22,6 @@ REACT_APP_TOKEN='API TOKEN' but replace API TOKEN as necessary
 - To run tests do ```yarn test```
 
 #### Code Coverage
-
 File            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ----------------|---------|----------|---------|---------|-------------------
 All files       |     100 |       90 |     100 |     100 |
