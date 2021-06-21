@@ -1,4 +1,7 @@
 ## Git Language Finder
+[![Build Status](https://travis-ci.com/dm-devtech/git-language-finder.svg?branch=main)](https://travis-ci.com/dm-devtech/git-language-finder)
+
+
 - Finds the most common coding language used by a Github user
 
 ### Git Authentication
