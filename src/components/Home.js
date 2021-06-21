@@ -9,13 +9,11 @@ const Home = () => {
 
   async function pagesOfRepos() {
     const totalPagesOfRepos = await RetrieveUserData(user)
-    console.log(totalPagesOfRepos)
     return totalPagesOfRepos
   }
 
   async function getRepoData() {
     const repoData = GetRepoData(user, await pagesOfRepos())
-    console.log(repoData)
     return repoData
   }
 
@@ -56,7 +54,6 @@ const Home = () => {
       const count = await countOfLanguages(repoData, uniqLanguages)
       const highestCount = await highestLangCount(count)
       const languages = await mostUsedLanguages(count, highestCount)
-      console.log(languages)
       setLanguage(languages)
     } catch(error) {
       console.error(error)
