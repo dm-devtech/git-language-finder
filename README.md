@@ -26,7 +26,6 @@ All files            |   97.01 |      100 |     100 |   96.43 |
  getRepoData.js      |   93.33 |      100 |     100 |      90 | 15                
  retrieveUserData.js |     100 |      100 |     100 |     100 |                   
 
-
 ### Tech used:
 - ReactJS (create-react-app)
 - React testing library
