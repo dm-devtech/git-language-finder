@@ -125,4 +125,3 @@ describe('testing main page', () => {
 //   })
 
 })
-
