@@ -1,25 +1,30 @@
 ## Git Language Finder
 [![Build Status](https://travis-ci.com/dm-devtech/git-language-finder.svg?branch=main)](https://travis-ci.com/dm-devtech/git-language-finder)
-
-
 - Finds the most common coding language used by a Github user
 
 ### Git Authentication
-- set up environment variable in .env file in root as follows:
-REACT_APP_TOKEN='API TOKEN' but replace API TOKEN as necessary
+- Set up .env file with: REACT_APP_TOKEN=[YOUR API TOKEN] but replace as appropriate
+- [How to set up a Git api token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
 ### Running the app
-- Clone the repo
-- Navigate to the local repo directory
-- Install dependencies with ```yarn install```
-- Use ```yarn start``` to run the app
+- Install dependencies with 
+```sh
+$ yarn install
+```
+- To run the app 
+```sh
+$ yarn start
+```
 - On the app page enter a Github username and click submit
 
 ### Screenshots
 ![home](screenshots/home.JPG) 
 
 ### Tests
-- To run tests do ```yarn test```
+- To run tests do
+```sh
+$ yarn test
+```
 
 #### Code Coverage
 File                 | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
