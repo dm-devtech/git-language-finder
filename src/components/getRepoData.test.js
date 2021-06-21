@@ -1,12 +1,11 @@
-import { render, fireEvent, waitFor } from '@testing-library/react';
-import Home from './Home';
+import getRepoData from './getRepoData';
 
 afterEach(() => {
   jest.restoreAllMocks();
 });
 
   test('testing result', async () => {
-    const fakeApi = [{public_repos: 2}, {language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
+    const fakeApi = [{language:null},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"Ruby"}]
 
     const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
       const fetchResponse = {
@@ -16,14 +15,30 @@ afterEach(() => {
       };
       return Promise.resolve(fetchResponse);
     })
+    
+    expect(await getRepoData("test", 1)).toEqual([null, null, "Ruby", "Ruby", "Ruby"])
+  })
 
-    const { getByText, getByTestId } = render(<Home />);
-    const submitButton = getByTestId("Submit")
+  test('testing result', async () => {
+    const fakeApi = [{language:"JavaScript"},{language:null},{language:"Ruby"},{language:"Ruby"},{language:"C#"},{language:"JavaScript"},{language:"JavaScript"}]
 
-    fireEvent.change(getByTestId("input-field"), { target: { value: 'octocat' } });
-    fireEvent.click(submitButton);
-
-    expect(fetchSpy).toHaveBeenCalledTimes(2);
-    await waitFor(() => expect(getByText("Language(s) used the most: Ruby")).toBeInTheDocument())
+    const fetchSpy = jest.spyOn(window, 'fetch').mockImplementation(() => {
+      const fetchResponse = {
+        ok: true,
+        json: () => Promise.resolve(fakeApi),
+        status: 200
+      };
+      return Promise.resolve(fetchResponse);
+    })
+    
+    expect(await getRepoData("test", 1)).toEqual([
+      'JavaScript',
+      null,
+      'Ruby',
+      'Ruby',
+      'C#',
+      'JavaScript',
+      'JavaScript'
+    ])
   })
 
