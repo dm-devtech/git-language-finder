@@ -15,4 +15,4 @@ const retrieveUserData = async(user) => {
     return totalPagesOfRepos
   }
 
-module.exports = retrieveUserData
+export default retrieveUserData

@@ -19,4 +19,4 @@ const getRepoData = async(user, numberOfPages) => {
 
   }
 
-module.exports = getRepoData
+export default getRepoData
