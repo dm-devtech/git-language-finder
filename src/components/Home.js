@@ -67,19 +67,24 @@ const Home = () => {
     return (
       <div>
         <h1>Git Hub Language Finder</h1>
-
+        <div class="box">
+        <div class="input-container">
             <input
               type='text'
               onChange={changeHandler}
               data-testid='input-field'
+              className="form__field"
               name='user'
               value={user}
              />
+             <label>User</label>
+             </div>
              <button onClick={getResult} data-testid='Submit' className="add-button">Submit</button>
 
           <div className='body-text' data-testid='result'>
             Language(s) used the most: {language}
           </div>
+        </div>
       </div>
     );
   }

@@ -1,132 +1,87 @@
-img[alt="home-icon"]{
-  margin: 0 auto;
-  display: inline-block;
-  max-width: 100%;
-  height: auto;
-  width: 30px;
-  text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i&subset=greek-ext');
+
+h1{
+  color:#fff;	
 }
 
-h1 {
-  text-align: center;
-  text-decoration: none;
-  font: 32px Arial, sans-serif;
-  font-weight: bold;
-  color: #6d5f67;
+body{
+	min-height:100vh;
+	font-family: 'Noto Sans', sans-serif;
+  background-color: rgba(0, 0, 0, 0.89);
 }
-
-h2 {
-  text-align: center;
-  text-decoration: none;
+.text-center{
+	color:#fff;	
+	text-transform:uppercase;
+    font-size: 23px;
+    margin: -50px 0 80px 0;
+    display: block;
+    text-align: center;
 }
-
-h3 {
-  margin: 0 auto;
-  text-align: center;
-  text-decoration: none;
+.body-text{
+  color:#fff;	
 }
-
-.Header {
-  padding: 0px;
-  height: 100%;
-  width: 100%;
-  letter-spacing: 2px;
-  color: #6d5f67;
-  font: 24px Arial, sans-serif;
-  font-weight: bold;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  justify-content: center;
-  display: inline-grid;
-  text-align: center;
+.box{
+	position:absolute;
+	left:50%;
+	top:30%;
+	transform: translate(-50%,-50%);
+    background-color: rgba(0, 0, 0, 0.89);
+	border-radius:3px;
+	padding:40px 60px;
 }
-
-.body-text {
-  height: 100%;
-  width: 100%;
-  letter-spacing: 2px;
-  color: #91818a;
-  font: 24px Arial, sans-serif;
-  text-decoration: none;
-  margin-top: 20px;
-  margin-bottom: 5px;
+.input-container{
+	position:relative;
+	margin-bottom:25px;
 }
-
-p {
-  margin: 5px;
-  font-weight: bold;
-  font: 12px Arial, sans-serif;
-
+.input-container label{
+	position:absolute;
+	top:0px;
+	left:0px;
+	font-size:16px;
+	color:#fff;	
+    pointer-event:none;
+	transition: all 0.5s ease-in-out;
 }
-
-.alt-body {
-  height: 100%;
-  width: 100%;
-  letter-spacing: 2px;
-  color: #91818a;
-  font: 14px Arial, sans-serif;
-  text-decoration: none;
-  margin-top: 2px;
-  margin-bottom: 20px;
-  display: inline-block;
+.input-container input{ 
+  border:0;
+  border-bottom:1px solid #555;  
+  background:transparent;
+  width:100%;
+  padding:8px 0 5px 0;
+  font-size:16px;
+  color:#fff;
 }
-
-body {
-  background-color: #eee2d3;
-  font: 50px Arial, sans-serif;
-  text-align: center;
-  text-decoration: none;
-  text-align: center;
+.input-container input:focus{ 
+ border:none;	
+ outline:none;
+ border-bottom:1px solid #e74c3c;	
 }
-
-.home-button {
-  font: 12px Arial, sans-serif;
-  padding: 20px 20px;
-  text-align: center;
-  cursor: pointer;
-  outline: none;
-  color: #91818a;
-  background-color: #e2cdb6;
-  border: none;
-  border-radius: 100px;
-  box-shadow: 0 6px #cba77c;
-  margin: 8px;
+.add-button{
+	color:#fff;
+	background-color:#9e2323;
+	outline: none;
+    border: 0;
+    color: #fff;
+	padding:10px 10px;
+	text-transform:uppercase;
+	margin-top:20px;
+  margin-bottom:20px;
+	border-radius:2px;
+	cursor:pointer;
+	position:relative;
 }
-
-.home-button:hover {
-  font: 12px Arial, sans-serif;
-  display:inline-block;
-}
-
-.home-button:active {
-  display:inline-block;
-  font: 12px Arial, sans-serif;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
-
-.add-button {
-  font: 10px Arial, sans-serif;
-  padding: 10px 10px;
-  cursor: pointer;
-  outline: none;
-  color: #91818a;
-  background-color: #e2cdb6;
-  border: none;
-  border-radius: 100px;
-  box-shadow: 0 6px #cba77c;
-  margin-bottom: 10px;
-  margin: 5px;
-}
-
-.add-button:hover {
-  font: 10px Arial, sans-serif;
-  display:inline-block;
-}
-
-.add-button:active {
-  display:inline-block;
-  font: 10px Arial, sans-serif;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+/*.btn:after{
+	content:"";
+	position:absolute;
+	background:rgba(0,0,0,0.50);
+	top:0;
+	right:0;
+	width:100%;
+	height:100%;
+}*/
+.input-container input:focus ~ label,
+.input-container input:valid ~ label{
+	top:-12px;
+	font-size:12px;
+	
 }
