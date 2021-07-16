@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/dm-devtech/git-language-finder.svg?branch=main)](https://travis-ci.com/dm-devtech/git-language-finder)
 - Finds the most common coding language used by a Github user
 - Use the app on Heroku [Here](https://git-language-finder.herokuapp.com/)
+- Use the app on Netlify [Here](https://git-language-finder.netlify.app/)
 
 ### Git Authentication
 - Set up .env file with: REACT_APP_TOKEN=[YOUR API TOKEN] but replace as appropriate
