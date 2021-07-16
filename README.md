@@ -19,7 +19,7 @@ $ yarn start
 - On the app page enter a Github username and click submit
 
 ### Screenshots
-![home](screenshots/home.JPG) 
+![home](screenshots/homepage.JPG) 
 
 ### Tests
 - To run tests do
